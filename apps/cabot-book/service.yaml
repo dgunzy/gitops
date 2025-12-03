@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cabot-book-service
+  namespace: cabot-book
+spec:
+  type: ClusterIP
+  ports:
+    - port: 7070
+      targetPort: web
+  selector:
+    app: cabot-book
+

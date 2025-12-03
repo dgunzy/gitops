@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cabot-cup
+  namespace: k0s-cluster-1
+spec:
+  strategy:
+    type: Recreate
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cabot-cup
+  template:
+    metadata:
+      labels:
+        app: cabot-cup
+    spec:
+      containers:
+        - name: cabot-cup
+          image: ghcr.io/dgunzy/ejs-cabot-app:latest
+          imagePullPolicy: Always
+          ports:
+            - name: web
+              containerPort: 3000
+
