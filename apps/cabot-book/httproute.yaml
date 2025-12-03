@@ -7,6 +7,9 @@ spec:
   parentRefs:
     - name: main-gateway
       namespace: envoy-gateway-system
+      sectionName: http
+    - name: main-gateway
+      namespace: envoy-gateway-system
       sectionName: https-cabotcupbook
     - name: main-gateway
       namespace: envoy-gateway-system
@@ -21,5 +24,5 @@ spec:
             value: /
       backendRefs:
         - name: cabot-book-service
-          port: 7070
+          port: 8080
 
