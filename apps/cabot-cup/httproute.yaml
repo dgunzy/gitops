@@ -7,7 +7,7 @@ spec:
   parentRefs:
     - name: main-gateway
       namespace: envoy-gateway-system
-      sectionName: https-cabotcup
+      sectionName: https
   hostnames:
     - "cabotcup.ca"
   rules:

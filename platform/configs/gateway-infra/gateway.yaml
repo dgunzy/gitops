@@ -17,8 +17,7 @@ spec:
       allowedRoutes:
         namespaces:
           from: All
-    - name: https-cabotcupbook
-      hostname: "cabotcupbook.com"
+    - name: https
       protocol: HTTPS
       port: 443
       allowedRoutes:
@@ -29,28 +28,6 @@ spec:
         certificateRefs:
           - name: cabotcupbook-cert
             kind: Secret
-    - name: https-www-cabotcupbook
-      hostname: "www.cabotcupbook.com"
-      protocol: HTTPS
-      port: 443
-      allowedRoutes:
-        namespaces:
-          from: All
-      tls:
-        mode: Terminate
-        certificateRefs:
-          - name: cabotcupbook-cert
-            kind: Secret
-    - name: https-cabotcup
-      hostname: "cabotcup.ca"
-      protocol: HTTPS
-      port: 443
-      allowedRoutes:
-        namespaces:
-          from: All
-      tls:
-        mode: Terminate
-        certificateRefs:
           - name: cabotcup-cert
             kind: Secret
 
