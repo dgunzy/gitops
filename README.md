@@ -107,7 +107,7 @@ Production Kubernetes cluster running k0s with Flux Operator APIs as the GitOps 
 3. **Seed Flux Operator (no Helm):**
 
    ```bash
-   kubectl apply -k "github.com/controlplaneio-fluxcd/flux-operator/config/default?ref=v0.42.1"
+   kubectl apply -f https://github.com/controlplaneio-fluxcd/flux-operator/releases/latest/download/install.yaml
    ```
 
 4. **Apply FluxInstance (operator installs Flux + syncs this repo):**
@@ -231,8 +231,9 @@ Update Helm chart versions in `platform/controllers/*/helmrelease.yaml` and comm
 
 ### Updating Flux and Flux Operator
 
-- **Flux controllers**: tune semver in `clusters/k0s-cluster-1/flux-instance.yaml` (`spec.distribution.version`, e.g. `2.x` or `2.8.x`).
-- **Flux Operator**: tune semver in `clusters/k0s-cluster-1/flux-operator/source.yaml` (`spec.ref.semver`, currently `0.42.x`).
+- **Flux controllers**: managed by `clusters/k0s-cluster-1/flux-instance.yaml` (`spec.distribution.version`, currently `2.x`).
+- **Flux Operator**: managed by `clusters/k0s-cluster-1/flux-operator/source.yaml` (`spec.ref.semver`, currently `0.x`).
+- This repo intentionally uses moving semver lanes (not exact pins) so upgrades continue automatically through Flux.
 - Commit and push; Flux applies upgrades.
 
 ### Backup & Recovery

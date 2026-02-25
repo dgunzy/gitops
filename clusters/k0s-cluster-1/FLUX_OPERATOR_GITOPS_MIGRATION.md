@@ -40,7 +40,7 @@ while Flux itself reconciles the operator manifests from Git.
 ## Bootstrap for New Cluster (No Helm)
 
 1. Seed operator once:
-   - `kubectl apply -k "github.com/controlplaneio-fluxcd/flux-operator/config/default?ref=v0.42.1"`
+   - `kubectl apply -f https://github.com/controlplaneio-fluxcd/flux-operator/releases/latest/download/install.yaml`
 2. Apply `FluxInstance`:
    - `kubectl apply -f clusters/k0s-cluster-1/flux-instance.yaml`
 3. Flux takes over and reconciles the full graph from Git.
@@ -52,6 +52,7 @@ while Flux itself reconciles the operator manifests from Git.
   - `spec.distribution.version` (currently `2.x`)
 - Flux Operator:
   - `clusters/k0s-cluster-1/flux-operator/source.yaml`
-  - `spec.ref.semver` (currently `0.42.x`)
+  - `spec.ref.semver` (currently `0.x`)
 
-Use patch-only ranges for conservative rollout, broaden to minor ranges when desired.
+Recommended policy for this repo is moving semver lanes (`2.x` and `0.x`) so Flux
+and Flux Operator keep upgrading without Helm or manual version pins.
