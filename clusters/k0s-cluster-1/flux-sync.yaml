@@ -1,13 +1,31 @@
-# Kustomization for platform components
-# Note: GitRepository is bootstrapped by FluxInstance sync section
+# Kustomization for platform controllers (CRDs and operators)
+# Note: GitRepository is bootstrapped by FluxInstance sync section.
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: platform
+  name: platform-controllers
   namespace: flux-system
 spec:
   interval: 10m0s
-  path: ./clusters/k0s-cluster-1/platform
+  path: ./clusters/k0s-cluster-1/platform/controllers
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  wait: true
+  timeout: 10m
+---
+# Kustomization for platform configs (depends on controllers)
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: platform-configs
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  dependsOn:
+    - name: platform-controllers
+  path: ./clusters/k0s-cluster-1/platform/configs
   prune: true
   sourceRef:
     kind: GitRepository
@@ -24,7 +42,7 @@ metadata:
 spec:
   interval: 5m0s
   dependsOn:
-    - name: platform
+    - name: platform-configs
   path: ./clusters/k0s-cluster-1/apps
   prune: true
   sourceRef:
@@ -32,4 +50,3 @@ spec:
     name: flux-system
   wait: true
   timeout: 5m
-

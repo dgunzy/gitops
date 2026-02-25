@@ -5,6 +5,7 @@ metadata:
   namespace: flux-system
   annotations:
     fluxcd.controlplane.io/reconcileEvery: "1h"
+    fluxcd.controlplane.io/reconcileArtifactEvery: "10m"
     fluxcd.controlplane.io/reconcileTimeout: "5m"
 spec:
   distribution:
@@ -18,6 +19,7 @@ spec:
     - notification-controller
   cluster:
     type: kubernetes
+    size: medium
     multitenant: false
     networkPolicy: true
     domain: "cluster.local"
@@ -27,4 +29,3 @@ spec:
     ref: "refs/heads/main"
     path: "clusters/k0s-cluster-1"
     interval: "1m0s"
-

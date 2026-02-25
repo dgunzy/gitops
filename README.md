@@ -1,12 +1,12 @@
 # k0s GitOps Cluster
 
-Production Kubernetes cluster running k0s with Flux Operator for GitOps management.
+Production Kubernetes cluster running k0s with Flux Operator APIs as the GitOps control plane.
 
 ## Cluster Information
 
 - **Distribution**: k0s v1.34.2 (single-node controller+worker)
 - **Server**: Ubuntu 24.04.3 LTS
-- **GitOps**: Flux Operator v0.35.0
+- **GitOps**: Flux and Flux Operator are both reconciled from Git
 - **Repository**: https://github.com/dgunzy/gitops
 
 ## Architecture
@@ -14,24 +14,18 @@ Production Kubernetes cluster running k0s with Flux Operator for GitOps manageme
 ### Repository Structure
 
 ```
-├── apps/                      # Application deployments
-│   ├── cabot-book/           # Book tracking app (cabotcupbook.com)
-│   └── cabot-cup/            # Cup standings app (cabotcup.ca)
-├── clusters/my-cluster/       # Cluster-specific configuration
-│   ├── flux-instance.yaml    # Flux Operator configuration
-│   └── flux-sync.yaml        # Flux reconciliation setup
-└── platform/                  # Platform services
-    ├── controllers/          # CRDs and operators
-    │   ├── gateway-api/      # Gateway API CRDs v1.2.1
-    │   ├── metallb/          # MetalLB LoadBalancer
-    │   ├── cert-manager/     # cert-manager v1.16.5
-    │   ├── envoy-gateway/    # Envoy Gateway v1.6.0
-    │   └── external-secrets/ # External Secrets Operator v0.20.4
-    └── configs/              # Platform configuration
-        ├── gateway-infra/    # Gateway and GatewayClass
-        ├── cluster-issuers/  # Let's Encrypt issuers
-        ├── external-secrets/ # ClusterSecretStore (AWS)
-        └── metallb/          # IP pool configuration
+├── apps/                               # Application deployments
+│   ├── cabot-book/
+│   └── cabot-cup/
+├── clusters/k0s-cluster-1/            # Cluster entrypoint synced by FluxInstance
+│   ├── flux-instance.yaml             # Flux lifecycle (install/upgrade) via FluxOperator API
+│   ├── flux-sync.yaml                 # Kustomization dependency graph
+│   ├── flux-operator/                 # Flux-managed operator source + kustomization
+│   ├── platform/                      # Cluster wrapper to shared platform
+│   └── apps/                          # Cluster wrapper to shared apps
+└── platform/                          # Shared platform services
+    ├── controllers/                   # CRDs and operators
+    └── configs/                       # Controller-dependent resources
 ```
 
 ### Platform Components
@@ -57,9 +51,9 @@ Production Kubernetes cluster running k0s with Flux Operator for GitOps manageme
 
 **GitOps:**
 
-- **Flux Operator v0.35.0**: Declarative Flux installation
-- **Components**: All 6 Flux components including image automation
-- **Sync**: Automatic reconciliation from main branch every 1-5 minutes
+- **FluxInstance API**: declarative Flux install and automatic Flux upgrades
+- **Flux Operator via Flux**: operator reconciled by Flux from upstream tagged source
+- **Sync Chain**: `flux-system` -> `platform-controllers` -> `platform-configs` -> `apps`
 
 ## Applications
 
@@ -91,7 +85,6 @@ Production Kubernetes cluster running k0s with Flux Operator for GitOps manageme
 2. **Local Tools:**
    - kubectl
    - flux CLI
-   - helm (v4.0.1+)
    - git
    - SSH access to server
 
@@ -111,19 +104,17 @@ Production Kubernetes cluster running k0s with Flux Operator for GitOps manageme
    sudo k0s kubeconfig admin > ~/.kube/config
    ```
 
-3. **Install Flux Operator via Helm:**
+3. **Seed Flux Operator (no Helm):**
 
    ```bash
-   helm install flux-operator oci://ghcr.io/controlplaneio-fluxcd/charts/flux-operator \\
-     --namespace flux-system \\
-     --create-namespace
+   kubectl apply -k "github.com/controlplaneio-fluxcd/flux-operator/config/default?ref=v0.42.1"
    ```
 
-4. **Apply Flux configuration:**
+4. **Apply FluxInstance (operator installs Flux + syncs this repo):**
 
    ```bash
-   kubectl apply -f clusters/my-cluster/flux-instance.yaml
-   kubectl apply -f clusters/my-cluster/flux-sync.yaml
+   kubectl apply -f clusters/k0s-cluster-1/flux-instance.yaml
+   kubectl -n flux-system wait fluxinstance/flux --for=condition=Ready --timeout=10m
    ```
 
 5. **Create AWS credentials secret:**
@@ -132,6 +123,13 @@ Production Kubernetes cluster running k0s with Flux Operator for GitOps manageme
      --namespace external-secrets \\
      --from-literal=access-key-id="<AWS_ACCESS_KEY>" \\
      --from-literal=secret-access-key="<AWS_SECRET_KEY>"
+   ```
+
+6. **Verify GitOps graph is active:**
+
+   ```bash
+   flux get source git -n flux-system
+   flux get kustomization -n flux-system
    ```
 
 ### DNS Configuration
@@ -192,6 +190,8 @@ flux get all -A
 
 # Force reconciliation
 flux reconcile source git flux-system
+flux reconcile source git flux-operator -n flux-system
+flux reconcile kustomization flux-operator -n flux-system
 flux reconcile kustomization platform-controllers
 flux reconcile kustomization platform-configs
 flux reconcile kustomization apps
@@ -229,6 +229,12 @@ Applications automatically update when new images are pushed (if using image aut
 
 Update Helm chart versions in `platform/controllers/*/helmrelease.yaml` and commit. Flux will automatically reconcile.
 
+### Updating Flux and Flux Operator
+
+- **Flux controllers**: tune semver in `clusters/k0s-cluster-1/flux-instance.yaml` (`spec.distribution.version`, e.g. `2.x` or `2.8.x`).
+- **Flux Operator**: tune semver in `clusters/k0s-cluster-1/flux-operator/source.yaml` (`spec.ref.semver`, currently `0.42.x`).
+- Commit and push; Flux applies upgrades.
+
 ### Backup & Recovery
 
 Critical data to backup:
@@ -241,6 +247,8 @@ Critical data to backup:
 
 - [k0s Documentation](https://docs.k0sproject.io/)
 - [Flux Documentation](https://fluxcd.io/flux/)
+- [Flux Operator Docs](https://fluxoperator.dev/docs/)
+- [Flux Operator Source](https://github.com/controlplaneio-fluxcd/flux-operator)
 - [Gateway API](https://gateway-api.sigs.k8s.io/)
 - [Envoy Gateway](https://gateway.envoyproxy.io/)
 - [cert-manager](https://cert-manager.io/)
