@@ -4,3 +4,4 @@ resources:
   - external-secret.yaml
   - git-repository.yaml
   - kustomization-resource.yaml
+  - image-automation-kustomization.yaml

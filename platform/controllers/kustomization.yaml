@@ -6,4 +6,5 @@ resources:
   - cert-manager
   - envoy-gateway
   - external-secrets
+  - local-path-provisioner
 
