@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: masters-pool-cert
+  namespace: envoy-gateway-system
+spec:
+  secretName: masters-pool-cert
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+    - masters-pool.cabotcup.ca

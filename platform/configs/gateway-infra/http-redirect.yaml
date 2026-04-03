@@ -12,6 +12,7 @@ spec:
     - "cabotcupbook.com"
     - "www.cabotcupbook.com"
     - "cabotcup.ca"
+    - "masters-pool.cabotcup.ca"
   rules:
     - matches:
         - path:

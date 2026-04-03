@@ -1,0 +1,104 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: masters-pool-data
+  namespace: masters-pool
+data:
+  # ── Pool entries CSV ────────────────────────────────────────────────────────
+  # Replace the placeholder rows below with real participant picks.
+  #
+  # HOW TO FORMAT:
+  #   - First row: "Entry" then one column per participant (their name)
+  #   - Each subsequent row: group label, then each person's pick for that group
+  #   - Use lastName only (e.g. "Scheffler") — case insensitive
+  #   - EXCEPTIONS — must use full name to avoid collisions:
+  #       Si Woo Kim   (not just "Kim")
+  #       Zach Johnson (not just "Johnson" — Dustin Johnson also in field)
+  #       Haotong Li   (not just "Li" — "li" substring-matches other names)
+  #
+  # 2026 GROUPS (for reference when filling in picks):
+  #   Group 1:     DeChambeau | McIlroy | Rahm | Scheffler
+  #   Group 2:     Åberg | Fleetwood | Schauffele | Young
+  #   Group 3:     Fitzpatrick | Morikawa | Reed | Rose
+  #   Group 4:     Koepka | Lee | Matsuyama | Spieth
+  #   Group 5:     Bhatia | Gotterup | Hovland | MacIntyre
+  #   Group 6:     Henley | Si Woo Kim | Knapp | Straka
+  #   Group 7:     Bridgeman | Day | Lowry | Thomas
+  #   Group 8:     Cantlay | Conners | Scott | Woodland
+  #   Group 9 (M): Haotong Li | Novak | Ortiz | Potgieter   ← payout DOUBLES
+  #   Group 10 (OM): Cabrera | Zach Johnson | Schwartzel | Willett  ← payout TRIPLES
+  #   WC:  anyone NOT listed above
+  #   1RL: anyone in the field
+  #
+  entries.csv: |
+    Entry,PARTICIPANT1,PARTICIPANT2
+    Group 1,Scheffler,McIlroy
+    Group 2,Åberg,Schauffele
+    Group 3,Rose,Morikawa
+    Group 4,Matsuyama,Koepka
+    Group 5,Hovland,Bhatia
+    Group 6,Straka,Si Woo Kim
+    Group 7,Thomas,Lowry
+    Group 8,Cantlay,Scott
+    Group 9 (M),Haotong Li,Novak
+    Group 10 (OM),Willett,Zach Johnson
+    WC,Burns,Theegala
+    1RL,Scheffler,McIlroy
+
+  # ── Masters Tournament payout structure ─────────────────────────────────────
+  # Official per-position prize money in USD.
+  # Update with official 2026 amounts once announced (typically released week of tournament).
+  # These are the 2025 amounts — adjust the top values when 2026 is confirmed.
+  payout-structure.json: |
+    {
+      "1":  4200000,
+      "2":  2268000,
+      "3":  1428000,
+      "4":  1008000,
+      "5":   840000,
+      "6":   756000,
+      "7":   703500,
+      "8":   651000,
+      "9":   609000,
+      "10":  567000,
+      "11":  525000,
+      "12":  483000,
+      "13":  441000,
+      "14":  399000,
+      "15":  378000,
+      "16":  357000,
+      "17":  336000,
+      "18":  315000,
+      "19":  294000,
+      "20":  273000,
+      "21":  252000,
+      "22":  235200,
+      "23":  218400,
+      "24":  201600,
+      "25":  184800,
+      "26":  168000,
+      "27":  161700,
+      "28":  155400,
+      "29":  149100,
+      "30":  142800,
+      "31":  136500,
+      "32":  130200,
+      "33":  123900,
+      "34":  118650,
+      "35":  113400,
+      "36":  108150,
+      "37":  102900,
+      "38":   98700,
+      "39":   94500,
+      "40":   90300,
+      "41":   86100,
+      "42":   81900,
+      "43":   77700,
+      "44":   73500,
+      "45":   69300,
+      "46":   65100,
+      "47":   60900,
+      "48":   57540,
+      "49":   54600,
+      "50":   52920
+    }

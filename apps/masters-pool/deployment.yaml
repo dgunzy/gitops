@@ -1,0 +1,117 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: masters-pool
+  namespace: masters-pool
+spec:
+  strategy:
+    type: Recreate
+  replicas: 1
+  selector:
+    matchLabels:
+      app: masters-pool
+  template:
+    metadata:
+      labels:
+        app: masters-pool
+    spec:
+      containers:
+        - name: masters-pool
+          image: ghcr.io/dgunzy/masters-pool:latest
+          imagePullPolicy: Always
+          ports:
+            - name: web
+              containerPort: 3000
+
+          # ── Sensitive credentials (from AWS Secrets Manager via ExternalSecret) ──
+          envFrom:
+            - secretRef:
+                name: masters-pool-env
+
+          # ── Tournament configuration ──────────────────────────────────────────
+          # Edit any value below in GitHub Mobile and Flux will apply it within 5 min.
+          env:
+            - name: ACTIVE_YEAR
+              value: "2026"
+
+            - name: TOURNAMENT_ID
+              value: "014"
+
+            - name: TOURNAMENT_START_DATE
+              value: "2026-04-09"
+            - name: TOURNAMENT_END_DATE
+              value: "2026-04-12"
+            - name: TOURNAMENT_START_HOUR
+              value: "07:30"
+            - name: TOURNAMENT_END_HOUR
+              value: "19:30"
+            - name: TOURNAMENT_TIMEZONE
+              value: "America/New_York"
+
+            # ── Polling intervals (milliseconds) ─────────────────────────────
+            - name: POLL_INTERVAL_ACTIVE
+              value: "300000"       # 5 minutes during tournament hours
+            - name: POLL_INTERVAL_OFF_HOURS
+              value: "3600000"      # 1 hour on tournament days outside hours
+            - name: POLL_INTERVAL_OFF_SEASON
+              value: "86400000"     # 24 hours when no tournament
+
+            # ── Special group rules ──────────────────────────────────────────
+            - name: MUTT_GROUP
+              value: "9"            # Group 9 gets MUTT_MULTIPLIER
+            - name: OLD_MUTT_GROUP
+              value: "10"           # Group 10 gets OLD_MUTT_MULTIPLIER
+            - name: MUTT_MULTIPLIER
+              value: "2"
+            - name: OLD_MUTT_MULTIPLIER
+              value: "3"
+
+            # ── Pool position payouts (positions 1,2,3,4,...) ────────────────
+            - name: POOL_PAYOUTS
+              value: "4475,2640,1920,1115"
+
+            # ── First Round Leader ───────────────────────────────────────────
+            # Change this to whoever the pool predicts will lead after Round 1
+            - name: FIRST_ROUND_LEADER_WINNER
+              value: "scheffler"
+            - name: FIRST_ROUND_LEADER_PAYOUT
+              value: "500000"
+
+            # ── Playoff override (leave blank unless a playoff occurred) ─────
+            # Set to lowercase surnames if the API doesn't reflect playoff result
+            - name: PLAYOFF_WINNER
+              value: ""
+            - name: PLAYOFF_RUNNER_UP
+              value: ""
+
+            # ── UI toggles ───────────────────────────────────────────────────
+            # Set to "false" to preview the live page before the tournament starts
+            - name: SHOW_NOT_STARTED_MESSAGE
+              value: "true"
+
+            # ── Data file paths (mounted from ConfigMap below) ───────────────
+            - name: CSV_PATH
+              value: "/data/entries.csv"
+            - name: PAYOUT_STRUCTURE_PATH
+              value: "/data/payout-structure.json"
+
+            - name: PORT
+              value: "3000"
+
+          volumeMounts:
+            - name: pool-data
+              mountPath: /data
+              readOnly: true
+
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "1000m"
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+
+      volumes:
+        - name: pool-data
+          configMap:
+            name: masters-pool-data

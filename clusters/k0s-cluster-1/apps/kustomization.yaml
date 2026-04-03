@@ -4,4 +4,5 @@ resources:
   - ../../../apps/cabot-book
   - ../../../apps/cabot-cup
   - ../../../apps/polytrader
+  - ../../../apps/masters-pool
 
