@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: masters-pool
-          image: ghcr.io/dgunzy/masters-pool:latest
+          image: ghcr.io/dgunzy/masters-pool:latest # {"$imagepolicy": "flux-system:masters-pool"}
           imagePullPolicy: Always
           ports:
             - name: web

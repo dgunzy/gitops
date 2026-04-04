@@ -1,0 +1,36 @@
+# Editing this file in Git triggers a new ConfigMap hash and forces a pod rollout.
+# Format:
+# - First row: "Entry" then one column per participant name.
+# - Each subsequent row: group label, then each participant's pick for that group.
+# - Use lastName only (for example "Scheffler"), case insensitive.
+# - Exceptions that should stay as full names:
+#   - Si Woo Kim
+#   - Zach Johnson
+#   - Haotong Li
+#
+# 2026 groups:
+# Group 1: DeChambeau | McIlroy | Rahm | Scheffler
+# Group 2: Åberg | Fleetwood | Schauffele | Young
+# Group 3: Fitzpatrick | Morikawa | Reed | Rose
+# Group 4: Koepka | Lee | Matsuyama | Spieth
+# Group 5: Bhatia | Gotterup | Hovland | MacIntyre
+# Group 6: Henley | Si Woo Kim | Knapp | Straka
+# Group 7: Bridgeman | Day | Lowry | Thomas
+# Group 8: Cantlay | Conners | Scott | Woodland
+# Group 9 (M): Haotong Li | Novak | Ortiz | Potgieter
+# Group 10 (OM): Cabrera | Zach Johnson | Schwartzel | Willett
+# WC: anyone not listed above
+# 1RL: anyone in the field
+Entry,PARTICIPANT1,PARTICIPANT2
+Group 1,Scheffler,McIlroy
+Group 2,Åberg,Schauffele
+Group 3,Rose,Morikawa
+Group 4,Matsuyama,Koepka
+Group 5,Hovland,Bhatia
+Group 6,Straka,Si Woo Kim
+Group 7,Thomas,Lowry
+Group 8,Cantlay,Scott
+Group 9 (M),Haotong Li,Novak
+Group 10 (OM),Willett,Zach Johnson
+WC,Burns,Theegala
+1RL,Scheffler,McIlroy

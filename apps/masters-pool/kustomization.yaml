@@ -3,8 +3,14 @@ kind: Kustomization
 namespace: masters-pool
 resources:
   - namespace.yaml
-  - configmap.yaml
   - external-secret.yaml
   - deployment.yaml
   - service.yaml
   - httproute.yaml
+configMapGenerator:
+  # Content-hashed ConfigMap names force a Deployment rollout whenever the
+  # tournament CSV or payout file changes in Git.
+  - name: masters-pool-data
+    files:
+      - entries.csv=entries.csv
+      - payout-structure.json=payout-structure.json
