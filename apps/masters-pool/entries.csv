@@ -1,4 +1,3 @@
-# Editing this file in Git triggers a new ConfigMap hash and forces a pod rollout.
 # Format:
 # - First row: "Entry" then one column per participant name.
 # - Each subsequent row: group label, then each participant's pick for that group.
@@ -21,16 +20,16 @@
 # Group 10 (OM): Cabrera | Zach Johnson | Schwartzel | Willett
 # WC: anyone not listed above
 # 1RL: anyone in the field
-Entry,PARTICIPANT1,PARTICIPANT2
-Group 1,Scheffler,McIlroy
-Group 2,Åberg,Schauffele
-Group 3,Rose,Morikawa
-Group 4,Matsuyama,Koepka
-Group 5,Hovland,Bhatia
-Group 6,Straka,Si Woo Kim
-Group 7,Thomas,Lowry
-Group 8,Cantlay,Scott
-Group 9 (M),Haotong Li,Novak
-Group 10 (OM),Willett,Zach Johnson
-WC,Burns,Theegala
-1RL,Scheffler,McIlroy
+Entry,Livingston,Mandavia,McHugh,"Dipasquale, K",Obradovic,Guns,"Dipasquale, D",Lazar,Mailman,Grimason,Retallick,Vogelsang,Schwartz,Theriault,Baker,Lewis,Wong,Jacobson,Levine,Gibson,Stewart,Broglin,Harder,Cho,Boeken,Delgrosso,Smith,Boutilier,Pokigo,Hum,Massey,Borenstein,Silver,Brannon,Carey,Olson,McGinnity,Saliba,Conniff,Lacroix,Amador,Toulany,Botsolas,Carey,Connor,Chimelski
+Group 1,Rahm,Scheffler,Scheffler,McIlroy,DeChambeau,Scheffler,Scheffler,Scheffler,Scheffler,Scheffler,Scheffler,Scheffler,Scheffler,Scheffler,McIlroy,Rahm,DeChambeau,Scheffler,Scheffler,Rahm,Rahm,Scheffler,Rahm,Scheffler,Rahm,DeChambeau,Rahm,Scheffler,DeChambeau,Scheffler,Scheffler,DeChambeau,DeChambeau,Rahm,DeChambeau,Scheffler,DeChambeau,Rahm,Rahm,Scheffler,Scheffler,Scheffler,DeChambeau,DeChambeau,DeChambeau,Scheffler
+Group 2,Åberg,Young,Schauffele,Åberg,Åberg,Åberg,Young,Åberg,Young,Schauffele,Schauffele,Åberg,Schauffele,Åberg,Åberg,Young,Fleetwood,Schauffele,Schauffele,Åberg,Young,Åberg,Schauffele,Åberg,Åberg,Åberg,Schauffele,Åberg,Åberg,Schauffele,Schauffele,Åberg,Schauffele,Young,Åberg,Schauffele,Åberg,Fleetwood,Schauffele,Åberg,Åberg,Schauffele,Fleetwood,Åberg,Åberg,Åberg
+Group 3,Fitzpatrick,Fitzpatrick,Fitzpatrick,Morikawa,Reed,Rose,Morikawa,Fitzpatrick,Fitzpatrick,Fitzpatrick,Fitzpatrick,Reed,Fitzpatrick,Fitzpatrick,Fitzpatrick,Fitzpatrick,Rose,Fitzpatrick,Fitzpatrick,Morikawa,Fitzpatrick,Morikawa,Fitzpatrick,Fitzpatrick,Fitzpatrick,Reed,Fitzpatrick,Rose,Reed,Reed,Fitzpatrick,Rose,Fitzpatrick,Reed,Fitzpatrick,Fitzpatrick,Morikawa,Rose,Fitzpatrick,Fitzpatrick,Fitzpatrick,Fitzpatrick,Morikawa,Fitzpatrick,Fitzpatrick,Fitzpatrick
+Group 4,Koepka,Matsuyama,Lee,Lee,Spieth,Spieth,Matsuyama,Lee,Koepka,Koepka,Lee,Koepka,Matsuyama,Matsuyama,Lee,Matsuyama,Matsuyama,Matsuyama,Matsuyama,Koepka,Lee,Matsuyama,Matsuyama,Lee,Spieth,Spieth,Matsuyama,Matsuyama,Matsuyama,Spieth,Matsuyama,Lee,Lee,Matsuyama,Koepka,Matsuyama,Spieth,Lee,Matsuyama,Matsuyama,Lee,Matsuyama,Lee,Koepka,Matsuyama,Matsuyama
+Group 5,MacIntyre,MacIntyre,Gotterup,Bhatia,Hovland,MacIntyre,MacIntyre,Bhatia,Bhatia,MacIntyre,Bhatia,Gotterup,MacIntyre,Bhatia,Bhatia,MacIntyre,Bhatia,MacIntyre,MacIntyre,Hovland,Gotterup,MacIntyre,MacIntyre,Bhatia,Gotterup,Bhatia,MacIntyre,Hovland,Gotterup,MacIntyre,MacIntyre,Bhatia,Bhatia,Gotterup,Hovland,Gotterup,Gotterup,Hovland,MacIntyre,Gotterup,Gotterup,MacIntyre,Hovland,Hovland,MacIntyre,MacIntyre
+Group 6,Henley,Henley,Henley,Straka,Knapp,Knapp,Henley,Si Woo Kim,Knapp,Henley,Knapp,Henley,Si Woo Kim,Straka,Knapp,Knapp,Straka,Henley,Si Woo Kim,Henley,Knapp,Straka,Henley,Si Woo Kim,Straka,Straka,Si Woo Kim,Straka,Si Woo Kim,Si Woo Kim,Si Woo Kim,Knapp,Si Woo Kim,Henley,Straka,Knapp,Henley,Straka,Knapp,Si Woo Kim,Knapp,Henley,Knapp,Straka,Si Woo Kim,Henley
+Group 7,Thomas,Thomas,Lowry,Bridgeman,Day,Bridgeman,Bridgeman,Lowry,Lowry,Lowry,Lowry,Day,Thomas,Day,Bridgeman,Bridgeman,Lowry,Bridgeman,Lowry,Lowry,Bridgeman,Day,Day,Bridgeman,Day,Day,Day,Lowry,Bridgeman,Bridgeman,Bridgeman,Day,Bridgeman,Bridgeman,Lowry,Bridgeman,Lowry,Thomas,Bridgeman,Lowry,Lowry,Bridgeman,Bridgeman,Lowry,Day,Thomas
+Group 8,Conners,Conners,Woodland,Cantlay,Conners,Cantlay,Scott,Scott,Scott,Cantlay,Woodland,Scott,Cantlay,Woodland,Scott,Cantlay,Woodland,Cantlay,Cantlay,Conners,Scott,Conners,Cantlay,Scott,Scott,Conners,Scott,Conners,Cantlay,Cantlay,Conners,Cantlay,Conners,Cantlay,Woodland,Conners,Cantlay,Conners,Cantlay,Scott,Scott,Cantlay,Conners,Woodland,Scott,Cantlay
+Group 9 (M),Potgieter,Novak,Haotong Li,Haotong Li,Potgieter,Potgieter,Novak,Potgieter,Potgieter,Potgieter,Haotong Li,Novak,Ortiz,Potgieter,Haotong Li,Ortiz,Haotong Li,Ortiz,Potgieter,Haotong Li,Ortiz,Ortiz,Ortiz,Haotong Li,Novak,Haotong Li,Ortiz,Potgieter,Potgieter,Ortiz,Haotong Li,Potgieter,Novak,Novak,Novak,Ortiz,Haotong Li,Novak,Ortiz,Haotong Li,Potgieter,Ortiz,Potgieter,Novak,Novak,Potgieter
+Group 10 (OM),Willett,Zach Johnson,Willett,Willett,Schwartzel,Zach Johnson,Willett,Schwartzel,Willett,Willett,Zach Johnson,Zach Johnson,Zach Johnson,Schwartzel,Zach Johnson,Willett,Schwartzel,Schwartzel,Zach Johnson,Willett,Willett,Schwartzel,Schwartzel,Zach Johnson,Zach Johnson,Zach Johnson,Schwartzel,Zach Johnson,Zach Johnson,Zach Johnson,Zach Johnson,Cabrera,Willett,Zach Johnson,Willett,Zach Johnson,Cabrera,Willett,Willett,Zach Johnson,Schwartzel,Zach Johnson,Schwartzel,Willett,Zach Johnson,Schwartzel
+WC,Penge,Burns,Nicolai Højgaard,Rasmus Højgaard,Smith,Nicolai Højgaard,Im,McNealy,Spaun,Nicolai Højgaard,Spaun,Im,McNealy,Hatton,McNealy,Nicolai Højgaard,Spaun,McNealy,Spaun,Homa,Kitayama,Im,Nicolai Højgaard,Burns,Homa,Homa,McNealy,Woodland,Nicolai Højgaard,Burns,Homa,Smith,Si Woo Kim,Hatton,Nicolai Højgaard,Im,Spaun,Hall,McNealy,McNealy,Spaun,Burns,Spaun,Nicolai Højgaard,Im,Nicolai Højgaard
+1RL,DeChambeau,Young,Rahm,Bridgeman,Knapp,Åberg,Bhatia,Schauffele,Scheffler,Scheffler,Rahm,Scheffler,Rose,Hovland,Fitzpatrick,Lee,Rose,Schauffele,Åberg,Åberg,Schauffele,Bhatia,Rahm,Im,Rahm,DeChambeau,Rahm,Scheffler,Nicolai Højgaard,Schauffele,Åberg,Fleetwood,Bhatia,DeChambeau,DeChambeau,Fitzpatrick,Åberg,Rahm,Fleetwood,Knapp,McIlroy,Scheffler,Åberg,DeChambeau,Fitzpatrick,Scheffler
