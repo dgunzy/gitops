@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: cabotcupbook-cert
+  namespace: envoy-gateway-system
+spec:
+  secretName: cabotcupbook-cert
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+    - cabotcupbook.com
+    - www.cabotcupbook.com

@@ -1,0 +1,14 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: flux-operator
+  namespace: flux-system
+spec:
+  interval: 30m0s
+  path: ./config/default
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-operator
+  wait: true
+  timeout: 5m

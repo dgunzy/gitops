@@ -1,0 +1,52 @@
+# Kustomization for platform controllers (CRDs and operators)
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: platform-controllers
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  path: ./platform/controllers
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  wait: true
+  timeout: 10m
+---
+# Kustomization for platform configs (depends on controllers)
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: platform-configs
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  dependsOn:
+    - name: platform-controllers
+  path: ./platform/configs
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  wait: true
+  timeout: 5m
+---
+# Kustomization for applications
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: apps
+  namespace: flux-system
+spec:
+  interval: 5m0s
+  dependsOn:
+    - name: platform-configs
+  path: ./apps
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  wait: true
+  timeout: 5m
+
