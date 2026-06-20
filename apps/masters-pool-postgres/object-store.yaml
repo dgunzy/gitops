@@ -1,0 +1,27 @@
+# Barman Cloud plugin backup target (AWS S3). Referenced from the Cluster via
+# spec.plugins[].parameters.barmanObjectName. serverName is intentionally NOT set here
+# (the CRD requires it to come from the plugin parameters in the Cluster).
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: masters-pool-postgres-backup
+  namespace: databases
+spec:
+  # Recovery-window retention: keep enough base backups + WALs to restore to any point in
+  # the last 14 days, prune the rest. With weekly base backups this always retains >=2 fulls.
+  # Cost: a quiet golf-pool DB is a few MB; storage is pennies. Barman owns pruning (not an
+  # S3 lifecycle rule) so the backup chain is never corrupted.
+  retentionPolicy: "14d"
+  configuration:
+    destinationPath: s3://cnpg-backups-027533315109-cacentral1/masters-pool-postgres
+    s3Credentials:
+      accessKeyId:
+        name: masters-pool-postgres-backup-creds
+        key: ACCESS_KEY_ID
+      secretAccessKey:
+        name: masters-pool-postgres-backup-creds
+        key: SECRET_ACCESS_KEY
+    wal:
+      compression: gzip
+    data:
+      compression: gzip

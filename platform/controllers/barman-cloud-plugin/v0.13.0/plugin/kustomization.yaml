@@ -1,0 +1,7 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+# Barman Cloud CNPG-I plugin (Deployment, Service, RBAC, cert-manager Certificates/Issuer).
+# Lives in the cnpg-system namespace (created by the cnpg-operator Kustomization), so the
+# `barman-plugin` Flux Kustomization dependsOn cnpg-operator. Needs cert-manager (platform-controllers).
+resources:
+  - barman-cloud-plugin.yaml

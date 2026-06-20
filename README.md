@@ -16,7 +16,9 @@ Production Kubernetes cluster running k0s with Flux Operator APIs as the GitOps 
 ```
 ├── apps/                               # Application deployments
 │   ├── cabot-book/
-│   └── cabot-cup/
+│   ├── cabot-cup/
+│   ├── masters-pool/                   # golf pool app + image automation
+│   └── masters-pool-postgres/          # CloudNativePG Cluster, ObjectStore, DB secrets
 ├── clusters/k0s-cluster-1/            # Cluster entrypoint synced by FluxInstance
 │   ├── flux-instance.yaml             # Flux lifecycle (install/upgrade) via FluxOperator API
 │   ├── flux-sync.yaml                 # Kustomization dependency graph
@@ -45,15 +47,27 @@ Production Kubernetes cluster running k0s with Flux Operator APIs as the GitOps 
 
 **Secrets Management:**
 
-- **External Secrets Operator v0.20.4**: Sync secrets from external providers
+- **External Secrets Operator v2.6.x**: Sync secrets from external providers
 - **Provider**: AWS Secrets Manager (ca-central-1 region)
 - **Store**: ClusterSecretStore with AWS credentials
+
+**Databases:**
+
+- **CloudNativePG (operator 1.29.1)**: PostgreSQL operator — vendored as rendered
+  `helm template` output under `platform/controllers/cloudnative-pg/<version>/`
+  (CRDs split from operator; see that dir's README to regenerate/upgrade).
+- **Barman Cloud Plugin (v0.13.0)**: modern CNPG-I backup method (replaces the deprecated
+  in-tree `barmanObjectStore`) at `platform/controllers/barman-cloud-plugin/<version>/`.
+  Backups go to **AWS S3**; requires cert-manager for operator↔plugin mTLS.
 
 **GitOps:**
 
 - **FluxInstance API**: declarative Flux install and automatic Flux upgrades
 - **Flux Operator via Flux**: operator reconciled by Flux from upstream tagged source
 - **Sync Chain**: `flux-system` -> `platform-controllers` -> `platform-configs` -> `apps`
+- **CNPG ordering** (separate branches in `flux-sync.yaml`):
+  `cnpg-crds` -> `cnpg-operator`, `barman-plugin-crds` -> `barman-plugin`,
+  then `masters-pool-postgres` (the DB instance, `dependsOn` operator + plugin).
 
 ## Applications
 
@@ -69,6 +83,34 @@ Production Kubernetes cluster running k0s with Flux Operator APIs as the GitOps 
 - **Domain**: cabotcup.ca
 - **Namespace**: cabot-cup
 - **Image**: ghcr.io/dgunzy/cabot-cup:latest
+
+### masters-pool-postgres (PostgreSQL for golf_pool)
+
+CloudNativePG `Cluster` for the `golf_pool` (Go) backend. Manifests in
+`apps/masters-pool-postgres/`, applied by the `masters-pool-postgres` Flux Kustomization.
+
+- **Namespace**: `databases`  •  **Cluster**: `masters-pool-postgres`  •  **DB**: `golf_pool`
+- **Access**: in-cluster only — CNPG creates ClusterIP services (`-rw`/`-ro`/`-r`); no
+  LoadBalancer/HTTPRoute. A `NetworkPolicy` further restricts ingress to opted-in namespaces.
+- **Backups**: Barman Cloud plugin -> AWS S3 (`ObjectStore` `masters-pool-postgres-backup`).
+  Weekly base backup (Sun 03:00) + continuous WAL archiving; **14d** recovery-window retention
+  (Barman auto-prunes). Cost-tuned: weekly (not daily) base backups + an S3 lifecycle rule that
+  aborts incomplete multipart uploads after 7d. Bucket + scoped IAM user `cnpg-backup`.
+
+**Credentials & the access label (how apps connect):**
+
+All DB secrets live in **AWS Secrets Manager** and are pulled in via External Secrets —
+there is no per-namespace wiring. The single source of truth is the AWS secret
+`k0s/masters-pool/postgres` (`username`, `password`, `dbname`, `host`, `port`, `DATABASE_URL`).
+
+- A **`ClusterExternalSecret`** (`masters-pool-db`) watches for namespaces labelled
+  **`db.masters-pool/access: "true"`** and, in each, creates Secret **`masters-pool-db`**
+  with key **`DATABASE_URL`**. The same label also grants `NetworkPolicy` ingress to Postgres.
+- **To connect a new app:** label its namespace `db.masters-pool/access=true`, then
+  `envFrom` / mount the `masters-pool-db` secret (`DATABASE_URL`). Nothing else required.
+- Internal-only secrets (in `databases` ns): `masters-pool-postgres-app` (CNPG role,
+  basic-auth, from `k0s/masters-pool/postgres`) and `masters-pool-postgres-backup-creds`
+  (S3 keys, from `k0s/masters-pool/postgres-backup`).
 
 ## Setup & Installation
 
@@ -243,6 +285,9 @@ Critical data to backup:
 - AWS Secrets Manager secrets
 - Application persistent volumes (if any)
 - k0s etcd backup: `sudo k0s backup --save-path=/root/k0s-backup.tar.gz`
+- **PostgreSQL**: handled automatically by CloudNativePG — continuous WAL archiving + weekly
+  base backups to AWS S3 via the Barman Cloud plugin (14d recovery-window retention, auto-pruned).
+  Restore/PITR by bootstrapping a new `Cluster` from the `ObjectStore` (`bootstrap.recovery`).
 
 ## Resources
 

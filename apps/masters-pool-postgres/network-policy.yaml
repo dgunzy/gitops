@@ -1,0 +1,33 @@
+# Defense-in-depth: restrict ingress to the Postgres pods. External access is already
+# impossible (ClusterIP services only); this limits in-cluster reachability to opted-in
+# namespaces, the CNPG operator/plugin, and the cluster's own pods (replication/sidecar).
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: masters-pool-postgres-allow
+  namespace: databases
+spec:
+  podSelector:
+    matchLabels:
+      cnpg.io/cluster: masters-pool-postgres
+  policyTypes:
+    - Ingress
+  ingress:
+    # Opted-in application namespaces -> Postgres wire protocol only.
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              db.masters-pool/access: "true"
+      ports:
+        - protocol: TCP
+          port: 5432
+    # CNPG operator + Barman Cloud plugin (status, backup coordination).
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: cnpg-system
+    # Same cluster pods (replicas, jobs, plugin sidecar).
+    - from:
+        - podSelector:
+            matchLabels:
+              cnpg.io/cluster: masters-pool-postgres

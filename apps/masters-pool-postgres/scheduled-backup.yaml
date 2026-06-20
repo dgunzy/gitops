@@ -1,0 +1,17 @@
+# Weekly base backup, Sunday 03:00 (CNPG cron is 6-field: sec min hour dom mon dow).
+# Weekly (not daily) keeps S3 cost/PUTs low; continuous WAL archiving still provides
+# point-in-time recovery between base backups. immediate: take one now to validate wiring.
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+  name: masters-pool-postgres-weekly
+  namespace: databases
+spec:
+  schedule: "0 0 3 * * 0"
+  immediate: true
+  backupOwnerReference: self
+  cluster:
+    name: masters-pool-postgres
+  method: plugin
+  pluginConfiguration:
+    name: barman-cloud.cloudnative-pg.io

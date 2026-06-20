@@ -1,0 +1,15 @@
+# Write-capable SSH source used ONLY by the ImageUpdateAutomation to push commits back.
+# The root flux-system GitRepository stays on anonymous HTTPS (read) so the cluster can
+# always bootstrap even if this deploy-key secret is missing.
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: gitops-write
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  url: ssh://git@github.com/dgunzy/gitops
+  ref:
+    branch: main
+  secretRef:
+    name: image-automation-git-auth
