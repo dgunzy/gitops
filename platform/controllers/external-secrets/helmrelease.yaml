@@ -8,7 +8,9 @@ spec:
   chart:
     spec:
       chart: external-secrets
-      version: "0.x"
+      # ESO re-versioned 0.20.x -> 2.x. Resources here use external-secrets.io/v1 (served by 2.x).
+      # Pinned to the 2.6 minor (auto-patches); installCRDs/replica values below remain valid.
+      version: "2.6.x"
       sourceRef:
         kind: HelmRepository
         name: external-secrets

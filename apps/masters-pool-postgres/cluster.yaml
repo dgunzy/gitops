@@ -1,0 +1,27 @@
+# CloudNativePG cluster for the golf_pool (Go) backend.
+# In-cluster only: CNPG creates ClusterIP services (-rw/-ro/-r) — no LoadBalancer/HTTPRoute.
+# Backups via the Barman Cloud plugin (isWALArchiver) -> ObjectStore masters-pool-postgres-backup.
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: masters-pool-postgres
+  namespace: databases
+spec:
+  instances: 1
+
+  storage:
+    storageClass: local-path
+    size: 10Gi
+
+  bootstrap:
+    initdb:
+      database: golf_pool
+      owner: golf_pool
+      secret:
+        name: masters-pool-postgres-app
+
+  plugins:
+    - name: barman-cloud.cloudnative-pg.io
+      isWALArchiver: true
+      parameters:
+        barmanObjectName: masters-pool-postgres-backup

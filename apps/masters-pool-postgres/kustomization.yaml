@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+# Applied by the `masters-pool-postgres` Flux Kustomization (dependsOn cnpg-operator +
+# barman-plugin). The ClusterExternalSecret is cluster-scoped; everything else is in `databases`.
+resources:
+  - namespace.yaml
+  - external-secret-app.yaml
+  - external-secret-backup.yaml
+  - object-store.yaml
+  - cluster.yaml
+  - scheduled-backup.yaml
+  - cluster-external-secret.yaml
+  - network-policy.yaml

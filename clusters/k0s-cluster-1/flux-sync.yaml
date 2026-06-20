@@ -50,3 +50,110 @@ spec:
     name: flux-system
   wait: true
   timeout: 5m
+---
+# ── CloudNativePG: CRDs first, then operator (vendored helm template) ──────────
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cnpg-crds
+  namespace: flux-system
+spec:
+  interval: 1h
+  retryInterval: 1m
+  path: ./platform/controllers/cloudnative-pg/1.29.1/crds
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  wait: true
+  timeout: 5m
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cnpg-operator
+  namespace: flux-system
+spec:
+  interval: 1h
+  retryInterval: 1m
+  dependsOn:
+    - name: cnpg-crds
+  path: ./platform/controllers/cloudnative-pg/1.29.1/operator
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  wait: true
+  timeout: 5m
+  healthChecks:
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: cnpg-cloudnative-pg
+      namespace: cnpg-system
+---
+# ── Barman Cloud plugin (modern backup method): CRD first, then plugin ─────────
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: barman-plugin-crds
+  namespace: flux-system
+spec:
+  interval: 1h
+  retryInterval: 1m
+  path: ./platform/controllers/barman-cloud-plugin/v0.13.0/crds
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  wait: true
+  timeout: 5m
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: barman-plugin
+  namespace: flux-system
+spec:
+  interval: 1h
+  retryInterval: 1m
+  dependsOn:
+    - name: barman-plugin-crds
+    - name: cnpg-operator        # plugin lives in cnpg-system + registers with the operator
+    - name: platform-controllers # needs cert-manager for operator<->plugin mTLS
+  path: ./platform/controllers/barman-cloud-plugin/v0.13.0/plugin
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  wait: true
+  timeout: 5m
+  healthChecks:
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: barman-cloud-plugin-barman-cloud
+      namespace: cnpg-system
+---
+# ── Postgres instance for golf_pool (Cluster + ObjectStore + secrets) ──────────
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: masters-pool-postgres
+  namespace: flux-system
+spec:
+  interval: 10m
+  retryInterval: 1m
+  dependsOn:
+    - name: cnpg-operator
+    - name: barman-plugin
+  path: ./apps/masters-pool-postgres
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  wait: true
+  timeout: 10m
+  healthChecks:
+    - apiVersion: postgresql.cnpg.io/v1
+      kind: Cluster
+      name: masters-pool-postgres
+      namespace: databases

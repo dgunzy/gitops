@@ -1,0 +1,6 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+# CloudNativePG CRDs only — applied first by the `cnpg-crds` Flux Kustomization so
+# the CRDs are Established before the operator (and any Cluster CR) reconciles.
+resources:
+  - cnpg-crds.yaml

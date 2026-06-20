@@ -6,8 +6,12 @@ metadata:
 spec:
   imageRepositoryRef:
     name: masters-pool
+  # Select time-sortable immutable tags produced by CI, e.g. 20260420T153012Z-sha-abc1234.
+  # The timestamp is fixed-width/zero-padded, so alphabetical order == chronological order
+  # (numerical can't be used here because the extracted value contains 'T' and 'Z').
   filterTags:
-    pattern: "^latest$"
+    pattern: '^(?P<ts>[0-9]{8}T[0-9]{6}Z)-sha-[0-9a-f]+$'
+    extract: '$ts'
   digestReflectionPolicy: Always
   interval: 5m
   policy:
