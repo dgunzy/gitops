@@ -6,6 +6,7 @@ resources:
   - namespace.yaml
   - external-secret-app.yaml
   - external-secret-backup.yaml
+  - cabot-cup-external-secret-role.yaml
   - object-store.yaml
   - cluster.yaml
   - scheduled-backup.yaml

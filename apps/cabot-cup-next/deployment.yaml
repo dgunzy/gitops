@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cabot-cup-next
+  labels:
+    app.kubernetes.io/name: cabot-cup
+    app.kubernetes.io/component: web
+spec:
+  # Staged foundation only. Set a published digest and explicitly scale after
+  # the database migration and secret prerequisites have passed.
+  replicas: 0
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: cabot-cup
+      app.kubernetes.io/component: web
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: cabot-cup
+        app.kubernetes.io/component: web
+    spec:
+      serviceAccountName: cabot-cup-next
+      automountServiceAccountToken: false
+      terminationGracePeriodSeconds: 30
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        fsGroup: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: cabot-cup
+          image: ghcr.io/dgunzy/cabot-cup:20260716T224221Z-sha-6cd8383@sha256:6da0b29221fefb3a5d3faff43a31c1c30f32ff1c2ab8a845ef073eab9c3dcb57 # {"$imagepolicy": "flux-system:cabot-cup"}
+          imagePullPolicy: Always
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          ports:
+            - name: web
+              containerPort: 8080
+              protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: cabot-cup-next-config
+            - secretRef:
+                name: cabot-cup-next-env
+            - secretRef:
+                name: cabot-cup-db
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: web
+            initialDelaySeconds: 2
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /livez
+              port: web
+            initialDelaySeconds: 10
+            periodSeconds: 20
+            timeoutSeconds: 2
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir:
+            sizeLimit: 64Mi

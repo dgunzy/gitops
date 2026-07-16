@@ -5,3 +5,4 @@ resources:
   - ../../../apps/cabot-cup
   - ../../../apps/masters-pool
   - ../../../apps/masters-pool-image-automation
+  - ../../../apps/cabot-cup-image-automation

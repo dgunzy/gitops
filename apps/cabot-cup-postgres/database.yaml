@@ -1,0 +1,14 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: cabot-cup
+  namespace: databases
+spec:
+  name: cabot_cup
+  owner: cabot_cup
+  cluster:
+    name: masters-pool-postgres
+  ensure: present
+  databaseReclaimPolicy: retain
+  allowConnections: true
+  connectionLimit: 20

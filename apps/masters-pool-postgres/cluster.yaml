@@ -9,6 +9,23 @@ metadata:
 spec:
   instances: 1
 
+  # The Cabot application owns a separate database and login on this shared
+  # PostgreSQL cluster. The password Secret is reconciled by
+  # this shared database foundation; this role has no cluster administration privileges.
+  managed:
+    roles:
+      - name: cabot_cup
+        ensure: present
+        login: true
+        superuser: false
+        createdb: false
+        createrole: false
+        replication: false
+        bypassrls: false
+        connectionLimit: 20
+        passwordSecret:
+          name: cabot-cup-postgres-role
+
   storage:
     storageClass: local-path
     size: 10Gi

@@ -1,0 +1,16 @@
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: cabot-cup
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: cabot-cup
+  filterTags:
+    pattern: '^(?P<ts>[0-9]{8}T[0-9]{6}Z)-sha-[0-9a-f]+$'
+    extract: '$ts'
+  digestReflectionPolicy: Always
+  interval: 5m
+  policy:
+    alphabetical:
+      order: asc

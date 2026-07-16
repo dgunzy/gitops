@@ -157,3 +157,57 @@ spec:
       kind: Cluster
       name: masters-pool-postgres
       namespace: databases
+---
+# Cabot database and isolated role on the shared CNPG cluster. This remains a
+# separate reconciliation boundary so application rollout cannot race DB setup.
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cabot-cup-postgres
+  namespace: flux-system
+spec:
+  interval: 10m
+  retryInterval: 1m
+  dependsOn:
+    - name: masters-pool-postgres
+  path: ./clusters/k0s-cluster-1/apps/cabot-cup-postgres
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  wait: true
+  timeout: 5m
+  # CNPG Database reports status.applied rather than a Ready condition, so use
+  # an explicit health expression before releasing the dependent app.
+  healthCheckExprs:
+    - apiVersion: postgresql.cnpg.io/v1
+      kind: Database
+      inProgress: >-
+        !has(status) || !has(status.observedGeneration) ||
+        status.observedGeneration != metadata.generation ||
+        !has(status.applied) || !status.applied
+      failed: "false"
+      current: >-
+        has(status) && has(status.observedGeneration) &&
+        status.observedGeneration == metadata.generation &&
+        has(status.applied) && status.applied
+---
+# Staged unified app. No route is declared and the Deployment remains scaled to
+# zero until an immutable application image and runtime secrets are available.
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cabot-cup-next
+  namespace: flux-system
+spec:
+  interval: 5m
+  retryInterval: 1m
+  dependsOn:
+    - name: cabot-cup-postgres
+  path: ./clusters/k0s-cluster-1/apps/cabot-cup-next
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  wait: true
+  timeout: 5m
