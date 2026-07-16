@@ -12,7 +12,7 @@ spec:
   template:
     metadata:
       annotations:
-        cabotcup.ca/migration-attempt: "000001-databases-2"
+        cabotcup.ca/migration-attempt: "000001-databases-3"
       labels:
         app.kubernetes.io/name: cabot-cup
         app.kubernetes.io/component: database-migration
@@ -57,3 +57,23 @@ spec:
         - name: tmp
           emptyDir:
             sizeLimit: 32Mi
+      initContainers:
+        - name: wait-for-network-policy
+          image: busybox:1.37.0@sha256:9532d8c39891ca2ecde4d30d7710e01fb739c87a8b9299685c63704296b16028
+          command:
+            - /bin/sh
+            - -c
+            - sleep 20
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              cpu: 1m
+              memory: 1Mi
+            limits:
+              cpu: 10m
+              memory: 4Mi

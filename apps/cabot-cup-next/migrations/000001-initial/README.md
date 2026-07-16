@@ -14,6 +14,7 @@ the new image before application reconciliation.
 The Job runs in `databases`, receives only `DATABASE_URL` from its dedicated
 `cabot-cup-migrate-db` ExternalSecret, and is admitted to CNPG by its exact pod
 labels. A primary-selecting headless Service avoids this cluster's broken kube-router
-ClusterIP path without bypassing NetworkPolicy. The Job cannot receive ingress and
-can egress only to DNS and TCP 5432. A failed Job blocks the public Deployment
-rollout and remains available for inspection.
+ClusterIP path without bypassing NetworkPolicy. A short init delay gives kube-router
+time to register the new pod IP in its label-selector ipset before the migration
+connects. The Job cannot receive ingress and can egress only to DNS and TCP 5432. A
+failed Job blocks the public Deployment rollout and remains available for inspection.
