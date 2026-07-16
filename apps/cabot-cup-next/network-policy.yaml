@@ -30,12 +30,9 @@ spec:
         - protocol: TCP
           port: 53
     # Cabot's database on the shared CNPG cluster.
-    - to:
-        # kube-router evaluates egress before Service DNAT, so target the stable
-        # read-write Service VIP. Database ingress still requires the Cabot label.
-        - ipBlock:
-            cidr: 10.98.237.91/32
-      ports:
+    # kube-router evaluates Service traffic at different translation stages. Limit
+    # by PostgreSQL port here; database ingress still requires the Cabot label.
+    - ports:
         - protocol: TCP
           port: 5432
     # Google OIDC, AWS APIs/S3, and other configured HTTPS dependencies.
