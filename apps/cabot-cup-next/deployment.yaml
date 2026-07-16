@@ -50,10 +50,6 @@ spec:
           envFrom:
             - configMapRef:
                 name: cabot-cup-next-config
-            - secretRef:
-                name: cabot-cup-next-env
-            - secretRef:
-                name: cabot-cup-db
           readinessProbe:
             httpGet:
               path: /readyz

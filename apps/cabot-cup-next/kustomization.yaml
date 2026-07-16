@@ -4,7 +4,6 @@ namespace: cabot-cup-next
 resources:
   - namespace.yaml
   - service-account.yaml
-  - external-secret.yaml
   - deployment.yaml
   - service.yaml
   - httproute.yaml

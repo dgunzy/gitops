@@ -7,4 +7,3 @@ metadata:
   labels:
     app.kubernetes.io/name: cabot-cup
     app.kubernetes.io/part-of: cabot-cup
-    db.cabot-cup/access: "true"

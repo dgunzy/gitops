@@ -18,33 +18,5 @@ spec:
       ports:
         - protocol: TCP
           port: 8080
-  egress:
-    # Cluster DNS.
-    - to:
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: kube-system
-      ports:
-        - protocol: UDP
-          port: 53
-        - protocol: TCP
-          port: 53
-    # Reserved for future authenticated database handlers. CNPG separately admits
-    # only this namespace on the PostgreSQL wire port.
-    - to:
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: databases
-          podSelector:
-            matchLabels:
-              cnpg.io/cluster: masters-pool-postgres
-      ports:
-        - protocol: TCP
-          port: 5432
-    # Google OIDC, AWS APIs/S3, and other configured HTTPS dependencies.
-    - to:
-        - ipBlock:
-            cidr: 0.0.0.0/0
-      ports:
-        - protocol: TCP
-          port: 443
+  # The embedded public site has no outbound dependencies.
+  egress: []
