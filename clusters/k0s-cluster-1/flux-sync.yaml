@@ -183,12 +183,12 @@ spec:
     - apiVersion: postgresql.cnpg.io/v1
       kind: Database
       inProgress: >-
-        !has(status) || !has(status.observedGeneration) ||
+        !has(status.observedGeneration) ||
         status.observedGeneration != metadata.generation ||
         !has(status.applied) || !status.applied
       failed: "false"
       current: >-
-        has(status) && has(status.observedGeneration) &&
+        has(status.observedGeneration) &&
         status.observedGeneration == metadata.generation &&
         has(status.applied) && status.applied
 ---
