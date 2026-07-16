@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: databases
 resources:
   - service-account.yaml
+  - service.yaml
   - external-secret.yaml
   - job.yaml
   - network-policy.yaml

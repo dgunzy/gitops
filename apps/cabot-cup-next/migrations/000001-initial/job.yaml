@@ -12,7 +12,7 @@ spec:
   template:
     metadata:
       annotations:
-        cabotcup.ca/migration-attempt: "000001-databases-1"
+        cabotcup.ca/migration-attempt: "000001-databases-2"
       labels:
         app.kubernetes.io/name: cabot-cup
         app.kubernetes.io/component: database-migration
