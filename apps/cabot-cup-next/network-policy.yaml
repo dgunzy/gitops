@@ -29,8 +29,8 @@ spec:
           port: 53
         - protocol: TCP
           port: 53
-    # Reserved for future authenticated database handlers. kube-router currently
-    # blocks this cross-namespace selector, so public-only pods cannot reach CNPG.
+    # Reserved for future authenticated database handlers. CNPG separately admits
+    # only this namespace on the PostgreSQL wire port.
     - to:
         - namespaceSelector:
             matchLabels:
