@@ -2,20 +2,21 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   name: cabot-cup
-  namespace: cabot-cup
+  labels:
+    app.kubernetes.io/name: cabot-cup
+    app.kubernetes.io/component: web
 spec:
   parentRefs:
     - name: main-gateway
       namespace: envoy-gateway-system
       sectionName: https
   hostnames:
-    - "cabotcup.ca"
+    - cabotcup.ca
   rules:
     - matches:
         - path:
             type: PathPrefix
             value: /
       backendRefs:
-        - name: cabot-cup-service
-          port: 7070
-
+        - name: cabot-cup-next
+          port: 8080

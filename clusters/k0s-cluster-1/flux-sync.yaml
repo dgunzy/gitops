@@ -192,8 +192,34 @@ spec:
         status.observedGeneration == metadata.generation &&
         has(status.applied) && status.applied
 ---
-# Internal unified app staging target. No route is declared, so the single replica
-# can be exercised inside the cluster without receiving public traffic.
+# Versioned schema migration gate. Force replacement is required because Job pod
+# templates are immutable when image automation advances the Cabot image.
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cabot-cup-migrate
+  namespace: flux-system
+spec:
+  interval: 5m
+  retryInterval: 1m
+  dependsOn:
+    - name: cabot-cup-postgres
+  path: ./clusters/k0s-cluster-1/apps/cabot-cup-migrate
+  prune: true
+  force: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  wait: true
+  timeout: 10m
+  healthChecks:
+    - apiVersion: batch/v1
+      kind: Job
+      name: cabot-cup-migrate-000001
+      namespace: cabot-cup-next
+---
+# Public unified Cabot application. The migration Kustomization must complete
+# successfully before Flux reconciles the application and cabotcup.ca route.
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
@@ -203,7 +229,7 @@ spec:
   interval: 5m
   retryInterval: 1m
   dependsOn:
-    - name: cabot-cup-postgres
+    - name: cabot-cup-migrate
   path: ./clusters/k0s-cluster-1/apps/cabot-cup-next
   prune: true
   sourceRef:

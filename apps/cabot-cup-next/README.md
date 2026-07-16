@@ -1,7 +1,8 @@
-# Cabot Cup next deployment
+# Cabot Cup unified deployment
 
-This is an internal staging deployment for the unified Go application. It runs one
-replica but has no `HTTPRoute`, so it cannot receive public or production traffic.
+This is the public deployment for the unified Go application. Its `HTTPRoute` owns
+`cabotcup.ca`; authenticated and administrative routes must remain unavailable until
+their authorization implementation is complete.
 
 AWS Secrets Manager must contain `k0s/cabot-cup/app` with:
 
@@ -13,11 +14,14 @@ Database credentials are intentionally separate and arrive through the
 `cabot-cup-db` Secret. Add S3 configuration only after selecting the upload bucket
 and defining least-privileged application access; do not reuse backup credentials.
 
-Before activation:
+Release ordering:
 
 1. Confirm the Cabot ImageRepository, ImagePolicy, and ImageUpdateAutomation are
    ready and resolve the current immutable CI-produced tag and digest.
-2. Verify the database migration job and both ExternalSecrets.
-3. Confirm `/livez` and `/readyz` exist in that image.
-4. Test the internal Service, then add DNS, a dedicated certificate, and an
-   `HTTPRoute` for `next.cabotcup.ca` without changing the production route.
+2. Flux reconciles `cabot-cup-postgres`, then the versioned migration Job, then this
+   Deployment and route.
+3. Verify the migration Job and both ExternalSecrets before promoting a new image.
+4. Confirm `/livez` and `/readyz` and the public routes after rollout.
+
+The legacy `cabot-cup` Deployment and Service remain in the cluster for rollback,
+but its conflicting `HTTPRoute` is intentionally absent.

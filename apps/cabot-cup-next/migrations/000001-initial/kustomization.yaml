@@ -1,7 +1,8 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: cabot-cup
+namespace: cabot-cup-next
 resources:
   - namespace.yaml
-  - deployment.yaml
-  - service.yaml
+  - service-account.yaml
+  - job.yaml
+  - network-policy.yaml

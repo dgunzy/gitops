@@ -6,7 +6,7 @@ metadata:
     app.kubernetes.io/name: cabot-cup
     app.kubernetes.io/component: web
 spec:
-  # Internal-only staging replica. No HTTPRoute is attached to this Service.
+  # Public production replica. The migration Flux Kustomization gates rollout.
   replicas: 1
   strategy:
     type: RollingUpdate
@@ -35,7 +35,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: cabot-cup
-          image: ghcr.io/dgunzy/cabot-cup:20260716T224221Z-sha-6cd8383@sha256:6da0b29221fefb3a5d3faff43a31c1c30f32ff1c2ab8a845ef073eab9c3dcb57 # {"$imagepolicy": "flux-system:cabot-cup"}
+          image: ghcr.io/dgunzy/cabot-cup:20260716T231329Z-sha-8646bd2@sha256:3503ec14a76c0dc2cd6fcae9eaa77ffc31637c44eded2f29cbb65d07512fddbd # {"$imagepolicy": "flux-system:cabot-cup"}
           imagePullPolicy: Always
           securityContext:
             allowPrivilegeEscalation: false

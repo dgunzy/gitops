@@ -1,0 +1,57 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: cabot-cup-migrate-000001
+  labels:
+    app.kubernetes.io/name: cabot-cup
+    app.kubernetes.io/component: database-migration
+    app.kubernetes.io/version: "000001"
+spec:
+  backoffLimit: 3
+  activeDeadlineSeconds: 600
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: cabot-cup
+        app.kubernetes.io/component: database-migration
+        app.kubernetes.io/version: "000001"
+    spec:
+      restartPolicy: Never
+      serviceAccountName: cabot-cup-migrate
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        fsGroup: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: migrate
+          image: ghcr.io/dgunzy/cabot-cup:20260716T231329Z-sha-8646bd2@sha256:3503ec14a76c0dc2cd6fcae9eaa77ffc31637c44eded2f29cbb65d07512fddbd # {"$imagepolicy": "flux-system:cabot-cup"}
+          imagePullPolicy: Always
+          args:
+            - migrate
+          envFrom:
+            - secretRef:
+                name: cabot-cup-db
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              cpu: 25m
+              memory: 32Mi
+            limits:
+              cpu: 250m
+              memory: 128Mi
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir:
+            sizeLimit: 32Mi
