@@ -31,12 +31,10 @@ spec:
           port: 53
     # Cabot's database on the shared CNPG cluster.
     - to:
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: databases
-          podSelector:
-            matchLabels:
-              cnpg.io/cluster: masters-pool-postgres
+        # kube-router evaluates egress before Service DNAT, so target the stable
+        # read-write Service VIP. Database ingress still requires the Cabot label.
+        - ipBlock:
+            cidr: 10.98.237.91/32
       ports:
         - protocol: TCP
           port: 5432
