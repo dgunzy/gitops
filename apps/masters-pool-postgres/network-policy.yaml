@@ -21,6 +21,14 @@ spec:
       ports:
         - protocol: TCP
           port: 5432
+    # Unified Cabot application namespace -> Postgres wire protocol only.
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: cabot-cup-next
+      ports:
+        - protocol: TCP
+          port: 5432
     # CNPG operator + Barman Cloud plugin (status, backup coordination).
     - from:
         - namespaceSelector:

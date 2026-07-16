@@ -3,4 +3,3 @@ kind: Kustomization
 resources:
   - database.yaml
   - cluster-external-secret.yaml
-  - network-policy.yaml
