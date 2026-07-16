@@ -1,7 +1,7 @@
 # Cabot Cup next deployment
 
-This is a staged deployment target for the unified Go application. It has no
-`HTTPRoute` and is scaled to zero, so it cannot receive production traffic.
+This is an internal staging deployment for the unified Go application. It runs one
+replica but has no `HTTPRoute`, so it cannot receive public or production traffic.
 
 AWS Secrets Manager must contain `k0s/cabot-cup/app` with:
 
@@ -19,4 +19,5 @@ Before activation:
    ready and resolve the current immutable CI-produced tag and digest.
 2. Verify the database migration job and both ExternalSecrets.
 3. Confirm `/livez` and `/readyz` exist in that image.
-4. Scale the Deployment and test it without changing the production routes.
+4. Test the internal Service, then add DNS, a dedicated certificate, and an
+   `HTTPRoute` for `next.cabotcup.ca` without changing the production route.

@@ -6,9 +6,8 @@ metadata:
     app.kubernetes.io/name: cabot-cup
     app.kubernetes.io/component: web
 spec:
-  # Staged foundation only. Set a published digest and explicitly scale after
-  # the database migration and secret prerequisites have passed.
-  replicas: 0
+  # Internal-only staging replica. No HTTPRoute is attached to this Service.
+  replicas: 1
   strategy:
     type: RollingUpdate
     rollingUpdate:

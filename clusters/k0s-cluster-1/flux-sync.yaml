@@ -192,8 +192,8 @@ spec:
         status.observedGeneration == metadata.generation &&
         has(status.applied) && status.applied
 ---
-# Staged unified app. No route is declared and the Deployment remains scaled to
-# zero until an immutable application image and runtime secrets are available.
+# Internal unified app staging target. No route is declared, so the single replica
+# can be exercised inside the cluster without receiving public traffic.
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
