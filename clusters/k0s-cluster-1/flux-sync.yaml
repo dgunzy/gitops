@@ -216,7 +216,7 @@ spec:
     - apiVersion: batch/v1
       kind: Job
       name: cabot-cup-migrate-000001
-      namespace: cabot-cup-next
+      namespace: databases
 ---
 # Public unified Cabot application. The migration Kustomization must complete
 # successfully before Flux reconciles the application and cabotcup.ca route.

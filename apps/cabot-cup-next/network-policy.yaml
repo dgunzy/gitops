@@ -29,10 +29,16 @@ spec:
           port: 53
         - protocol: TCP
           port: 53
-    # Cabot's database on the shared CNPG cluster.
-    # kube-router evaluates Service traffic at different translation stages. Limit
-    # by PostgreSQL port here; database ingress still requires the Cabot label.
-    - ports:
+    # Reserved for future authenticated database handlers. kube-router currently
+    # blocks this cross-namespace selector, so public-only pods cannot reach CNPG.
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: databases
+          podSelector:
+            matchLabels:
+              cnpg.io/cluster: masters-pool-postgres
+      ports:
         - protocol: TCP
           port: 5432
     # Google OIDC, AWS APIs/S3, and other configured HTTPS dependencies.

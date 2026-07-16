@@ -25,7 +25,7 @@ spec:
         - protocol: TCP
           port: 53
     # kube-router evaluates Service traffic at different translation stages. Limit
-    # by PostgreSQL port here; database ingress still requires the Cabot label.
+    # by PostgreSQL port here; CNPG ingress requires this Job's exact pod labels.
     - ports:
         - protocol: TCP
           port: 5432

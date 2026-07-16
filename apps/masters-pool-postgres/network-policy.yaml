@@ -29,6 +29,16 @@ spec:
       ports:
         - protocol: TCP
           port: 5432
+    # Versioned Cabot migration Jobs run in this namespace so kube-router can
+    # enforce an exact pod selector without cross-namespace Service translation.
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: cabot-cup
+              app.kubernetes.io/component: database-migration
+      ports:
+        - protocol: TCP
+          port: 5432
     # CNPG operator + Barman Cloud plugin (status, backup coordination).
     - from:
         - namespaceSelector:
