@@ -4,6 +4,7 @@ namespace: cabot-cup-next
 resources:
   - namespace.yaml
   - service-account.yaml
+  - external-secret.yaml
   - deployment.yaml
   - service.yaml
   - httproute.yaml
@@ -15,3 +16,7 @@ configMapGenerator:
       - APP_ENV=production
       - PORT=8080
       - PUBLIC_BASE_URL=https://cabotcup.ca
+      # Enabled in a second cutover commit after schema v2 and legacy promotion.
+      - PRIVATE_APP_ENABLED=false
+      - SESSION_TTL=12h
+      - LOGIN_ATTEMPT_TTL=10m

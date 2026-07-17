@@ -18,5 +18,32 @@ spec:
       ports:
         - protocol: TCP
           port: 8080
-  # The embedded public site has no outbound dependencies.
-  egress: []
+  egress:
+    # Cluster DNS for PostgreSQL and OIDC discovery.
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+    # The separately owned Cabot database on the shared internal CNPG cluster.
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: databases
+          podSelector:
+            matchLabels:
+              cnpg.io/cluster: masters-pool-postgres
+      ports:
+        - protocol: TCP
+          port: 5432
+    # OIDC discovery, authorization token exchange, and signing-key refresh.
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+      ports:
+        - protocol: TCP
+          port: 443
