@@ -18,5 +18,8 @@ configMapGenerator:
       - PUBLIC_BASE_URL=https://cabotcup.ca
       # Enabled in a second cutover commit after schema v2 and legacy promotion.
       - PRIVATE_APP_ENABLED=false
+      # real|test: test flips the app onto TEST_DATABASE_URL (cabot_cup_test).
+      # The app refuses test mode while APP_ENV=production.
+      - DATABASE_MODE=real
       - SESSION_TTL=12h
       - LOGIN_ATTEMPT_TTL=10m

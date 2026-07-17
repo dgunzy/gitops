@@ -1,0 +1,18 @@
+# Disposable rehearsal database for DATABASE_MODE=test. The application flips
+# between this and the real cabot_cup database via DATABASE_MODE, so end-to-end
+# betting/settlement workflows can be proven without touching real money.
+# Reclaim policy delete: this database must never hold authoritative data.
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: cabot-cup-test
+  namespace: databases
+spec:
+  name: cabot_cup_test
+  owner: cabot_cup
+  cluster:
+    name: masters-pool-postgres
+  ensure: present
+  databaseReclaimPolicy: delete
+  allowConnections: true
+  connectionLimit: 10
