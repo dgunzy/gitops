@@ -26,3 +26,6 @@ configMapGenerator:
       - DATABASE_MODE=real
       - SESSION_TTL=12h
       - LOGIN_ATTEMPT_TTL=10m
+      # Wagers up to this stake (in cents) are auto-approved on placement;
+      # larger ones wait for manual admin approval. Default here is $100.
+      - WAGER_AUTO_APPROVE_MAX_CENTS=10000
