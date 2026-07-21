@@ -12,6 +12,7 @@ spec:
     - "cabotcupbook.com"
     - "www.cabotcupbook.com"
     - "cabotcup.ca"
+    - "test.cabotcup.ca"
     - "masters-pool.cabotcup.ca"
   rules:
     - matches:
@@ -24,4 +25,3 @@ spec:
             scheme: https
             statusCode: 301
             port: 443
-

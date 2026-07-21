@@ -30,6 +30,7 @@ spec:
             kind: Secret
           - name: cabotcup-cert
             kind: Secret
+          - name: cabotcup-test-cert
+            kind: Secret
           - name: masters-pool-cert
             kind: Secret
-
