@@ -4,3 +4,4 @@ resources:
   - database.yaml
   - database-test.yaml
   - cluster-external-secret.yaml
+  - network-policy.yaml

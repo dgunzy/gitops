@@ -1,0 +1,9 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: cabot-cup-test
+resources:
+  - namespace.yaml
+  - service-account.yaml
+  - external-secret.yaml
+  - job.yaml
+  - network-policy.yaml

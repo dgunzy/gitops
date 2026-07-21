@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cabot-cup-test
+  labels:
+    app.kubernetes.io/name: cabot-cup-test
+    app.kubernetes.io/component: web
+    app.kubernetes.io/environment: acceptance
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: cabot-cup-test
+    app.kubernetes.io/component: web
+  ports:
+    - name: web
+      port: 8080
+      targetPort: web
+      protocol: TCP

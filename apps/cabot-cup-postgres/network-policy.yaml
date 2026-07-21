@@ -1,0 +1,23 @@
+# Cabot database access follows the same explicit namespace opt-in as secret
+# distribution. PostgreSQL credentials alone are insufficient without this
+# label, and both real and acceptance databases use the least-privileged Cabot
+# role rather than the shared cluster owner.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: cabot-cup-postgres-access
+  namespace: databases
+spec:
+  podSelector:
+    matchLabels:
+      cnpg.io/cluster: masters-pool-postgres
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              db.cabot-cup/access: "true"
+      ports:
+        - protocol: TCP
+          port: 5432

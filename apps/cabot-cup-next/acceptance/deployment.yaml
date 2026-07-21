@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cabot-cup-test
+  labels:
+    app.kubernetes.io/name: cabot-cup-test
+    app.kubernetes.io/component: web
+    app.kubernetes.io/environment: acceptance
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: cabot-cup-test
+      app.kubernetes.io/component: web
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: cabot-cup-test
+        app.kubernetes.io/component: web
+        app.kubernetes.io/environment: acceptance
+    spec:
+      serviceAccountName: cabot-cup-test
+      automountServiceAccountToken: false
+      terminationGracePeriodSeconds: 30
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        fsGroup: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: cabot-cup
+          image: ghcr.io/dgunzy/cabot-cup:20260721T232855Z-sha-3e66b60@sha256:2eaf72575f5172e5026311dd1572d2ee308321d5c2e93757728d216714d18efa # {"$imagepolicy": "flux-system:cabot-cup"}
+          imagePullPolicy: Always
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          ports:
+            - name: web
+              containerPort: 8080
+              protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: cabot-cup-test-config
+            - secretRef:
+                name: cabot-cup-test-env
+            - secretRef:
+                name: cabot-cup-test-db
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: web
+            initialDelaySeconds: 2
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /livez
+              port: web
+            initialDelaySeconds: 10
+            periodSeconds: 20
+            timeoutSeconds: 2
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: 25m
+              memory: 48Mi
+            limits:
+              cpu: 300m
+              memory: 192Mi
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir:
+            sizeLimit: 64Mi

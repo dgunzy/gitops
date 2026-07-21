@@ -1,0 +1,31 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: cabot-cup-test
+  labels:
+    app.kubernetes.io/name: cabot-cup-test
+    app.kubernetes.io/component: web
+    app.kubernetes.io/environment: acceptance
+spec:
+  parentRefs:
+    - name: main-gateway
+      namespace: envoy-gateway-system
+      sectionName: https
+  hostnames:
+    - test.cabotcup.ca
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      filters:
+        - type: ResponseHeaderModifier
+          responseHeaderModifier:
+            set:
+              - name: X-Cabot-Environment
+                value: acceptance
+              - name: X-Robots-Tag
+                value: noindex, nofollow
+      backendRefs:
+        - name: cabot-cup-test
+          port: 8080

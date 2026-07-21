@@ -237,3 +237,50 @@ spec:
     name: flux-system
   wait: true
   timeout: 5m
+---
+# Isolated acceptance schema gate. Both the CLI and its eventual web process
+# select TEST_DATABASE_URL and are rejected if it aliases the real database.
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cabot-cup-test-migrate
+  namespace: flux-system
+spec:
+  interval: 5m
+  retryInterval: 1m
+  dependsOn:
+    - name: cabot-cup-postgres
+  path: ./clusters/k0s-cluster-1/apps/cabot-cup-test-migrate
+  prune: true
+  force: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  wait: true
+  timeout: 10m
+  healthChecks:
+    - apiVersion: batch/v1
+      kind: Job
+      name: cabot-cup-test-migrate-000001
+      namespace: cabot-cup-test
+---
+# Browser-accessible acceptance instance. It cannot release until the isolated
+# schema gate and the Gateway/certificate platform configuration are healthy.
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cabot-cup-test
+  namespace: flux-system
+spec:
+  interval: 5m
+  retryInterval: 1m
+  dependsOn:
+    - name: cabot-cup-test-migrate
+    - name: platform-configs
+  path: ./clusters/k0s-cluster-1/apps/cabot-cup-test
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  wait: true
+  timeout: 5m

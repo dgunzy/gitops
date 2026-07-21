@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: cabot-cup-test-migrate
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: cabot-cup-test
+      app.kubernetes.io/component: database-migration
+      app.kubernetes.io/environment: acceptance
+  policyTypes:
+    - Ingress
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+    # Service traffic can be evaluated before or after translation; the CNPG
+    # ingress policy separately limits this namespace to PostgreSQL only.
+    - ports:
+        - protocol: TCP
+          port: 5432
