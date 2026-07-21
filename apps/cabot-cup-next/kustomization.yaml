@@ -16,8 +16,11 @@ configMapGenerator:
       - APP_ENV=production
       - PORT=8080
       - PUBLIC_BASE_URL=https://cabotcup.ca
-      # Enabled in a second cutover commit after schema v2 and legacy promotion.
-      - PRIVATE_APP_ENABLED=false
+      # Enables /login, /book, and /admin plus the in-process outbox
+      # dispatcher. Membership is invitation/approval-gated and the ledger
+      # starts empty, so exposure is login-only until the bootstrapped owner
+      # invites members. Reverting to false is a clean rollback.
+      - PRIVATE_APP_ENABLED=true
       # real|test: test flips the app onto TEST_DATABASE_URL (cabot_cup_test).
       # The app refuses test mode while APP_ENV=production.
       - DATABASE_MODE=real
