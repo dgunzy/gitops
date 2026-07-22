@@ -36,7 +36,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: cabot-cup
-          image: ghcr.io/dgunzy/cabot-cup:20260722T000002Z-sha-4c59365@sha256:16ebaee02edea7ab2922a6352e96bacfded8f4739be67cf7c63d34b3c90acb4f # {"$imagepolicy": "flux-system:cabot-cup"}
+          image: ghcr.io/dgunzy/cabot-cup:20260722T001159Z-sha-4c09440@sha256:b2548410307998e63120040c0bc06f8abf6e0e774975699747643f217b5d7c38 # {"$imagepolicy": "flux-system:cabot-cup"}
           imagePullPolicy: Always
           securityContext:
             allowPrivilegeEscalation: false
