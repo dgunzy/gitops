@@ -20,3 +20,5 @@ configMapGenerator:
       - SESSION_TTL=12h
       - LOGIN_ATTEMPT_TTL=10m
       - WAGER_AUTO_APPROVE_MAX_CENTS=10000
+      # Default dynamic-pricing liquidity ("b", in cents). See go-book/docs/CONFIGURATION.md.
+      - PRICING_LIQUIDITY_DEFAULT_CENTS=300000

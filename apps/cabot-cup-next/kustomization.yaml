@@ -29,3 +29,7 @@ configMapGenerator:
       # Wagers up to this stake (in cents) are auto-approved on placement;
       # larger ones wait for manual admin approval. Default here is $100.
       - WAGER_AUTO_APPROVE_MAX_CENTS=10000
+      # Default dynamic-pricing liquidity ("b", in cents) for a new market when
+      # dynamic pricing is on but no value is typed. Larger = the line moves less
+      # per dollar of action. Default here is $3,000. See go-book/docs/CONFIGURATION.md.
+      - PRICING_LIQUIDITY_DEFAULT_CENTS=300000
