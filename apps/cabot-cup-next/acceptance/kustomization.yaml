@@ -24,3 +24,4 @@ configMapGenerator:
       - DEFAULT_CREDIT_LIMIT_CENTS=150000
       # Default dynamic-pricing liquidity ("b", in cents). See go-book/docs/CONFIGURATION.md.
       - PRICING_LIQUIDITY_DEFAULT_CENTS=500000
+      - WAGER_MAX_PAYOUT_CENTS=500000
