@@ -23,4 +23,4 @@ configMapGenerator:
       # Credit limit (in cents) for a newly invited member. See go-book/docs/CONFIGURATION.md.
       - DEFAULT_CREDIT_LIMIT_CENTS=150000
       # Default dynamic-pricing liquidity ("b", in cents). See go-book/docs/CONFIGURATION.md.
-      - PRICING_LIQUIDITY_DEFAULT_CENTS=300000
+      - PRICING_LIQUIDITY_DEFAULT_CENTS=500000

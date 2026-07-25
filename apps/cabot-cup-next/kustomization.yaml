@@ -36,4 +36,4 @@ configMapGenerator:
       # Default dynamic-pricing liquidity ("b", in cents) for a new market when
       # dynamic pricing is on but no value is typed. Larger = the line moves less
       # per dollar of action. Default here is $3,000. See go-book/docs/CONFIGURATION.md.
-      - PRICING_LIQUIDITY_DEFAULT_CENTS=300000
+      - PRICING_LIQUIDITY_DEFAULT_CENTS=500000
