@@ -27,8 +27,12 @@ configMapGenerator:
       - SESSION_TTL=12h
       - LOGIN_ATTEMPT_TTL=10m
       # Wagers up to this stake (in cents) are auto-approved on placement;
-      # larger ones wait for manual admin approval. Default here is $100.
-      - WAGER_AUTO_APPROVE_MAX_CENTS=10000
+      # larger ones wait for manual admin approval. Default here is $200.
+      - WAGER_AUTO_APPROVE_MAX_CENTS=20000
+      # Credit limit (in cents) a newly invited member is created with: how far
+      # their balance may go negative. Raise it per player on the Members page.
+      # Default here is $1,500. See go-book/docs/CONFIGURATION.md.
+      - DEFAULT_CREDIT_LIMIT_CENTS=150000
       # Default dynamic-pricing liquidity ("b", in cents) for a new market when
       # dynamic pricing is on but no value is typed. Larger = the line moves less
       # per dollar of action. Default here is $3,000. See go-book/docs/CONFIGURATION.md.
