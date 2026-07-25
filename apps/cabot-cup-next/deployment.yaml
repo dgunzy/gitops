@@ -54,6 +54,17 @@ spec:
                 name: cabot-cup-next-env
             - secretRef:
                 name: cabot-cup-db
+          # The process retries an unreachable database for up to
+          # DATABASE_CONNECT_TIMEOUT (30s) before serving. A startup probe gives
+          # it that room and holds the liveness probe off until it succeeds, so
+          # a slow start cannot be killed mid-retry. 20 x 2s = 40s of grace.
+          startupProbe:
+            httpGet:
+              path: /livez
+              port: web
+            periodSeconds: 2
+            timeoutSeconds: 2
+            failureThreshold: 20
           readinessProbe:
             httpGet:
               path: /readyz
