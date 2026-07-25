@@ -50,7 +50,7 @@ spec:
               memory: 4Mi
       containers:
         - name: migrate
-          image: ghcr.io/dgunzy/cabot-cup:20260725T204610Z-sha-3449fa3@sha256:a03e9170b8b3defd55ffa217bbfff382e1d869e7dbed8c6578586669225bd541 # {"$imagepolicy": "flux-system:cabot-cup"}
+          image: ghcr.io/dgunzy/cabot-cup:20260725T210429Z-sha-1b3c233@sha256:fe309bf2a274400fa70d98074978a2dc5e23a06c73fc97538ba16c7b0a46133d # {"$imagepolicy": "flux-system:cabot-cup"}
           imagePullPolicy: Always
           args:
             - migrate
