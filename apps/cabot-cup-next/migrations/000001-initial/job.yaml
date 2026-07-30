@@ -30,7 +30,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: migrate
-          image: ghcr.io/dgunzy/cabot-cup:20260730T161953Z-sha-c3f3e10@sha256:a08bc91135c5196c5da7a78e3da1c5d9b60fd994288e4918b5cfecaca3d4278c # {"$imagepolicy": "flux-system:cabot-cup"}
+          image: ghcr.io/dgunzy/cabot-cup:20260730T162620Z-sha-98924bc@sha256:a6e489b8f555c9754192cd56c83dc5cce13eaeb9da552c76e3ccc6c44a26360b # {"$imagepolicy": "flux-system:cabot-cup"}
           imagePullPolicy: Always
           args:
             - migrate
